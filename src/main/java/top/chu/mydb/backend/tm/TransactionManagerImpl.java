@@ -1,6 +1,5 @@
 package top.chu.mydb.backend.tm;
 
-import sun.security.provider.PolicySpiFile;
 import top.chu.mydb.backend.utils.Panic;
 import top.chu.mydb.backend.utils.Parser;
 import top.chu.mydb.common.Error;
