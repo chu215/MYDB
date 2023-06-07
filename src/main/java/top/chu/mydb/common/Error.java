@@ -12,4 +12,6 @@ public class Error {
     public static final Exception FileNotExistsException = new RuntimeException("File does not exists!");
 
     public static final Exception CacheFullException = new RuntimeException("Cache is full!");
+
+    public static final Exception MemTooSmallException = new RuntimeException("Memory too small!");
 }
