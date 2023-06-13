@@ -14,4 +14,6 @@ public class Error {
     public static final Exception CacheFullException = new RuntimeException("Cache is full!");
 
     public static final Exception MemTooSmallException = new RuntimeException("Memory too small!");
+
+    public static final Exception BadLogFileException = new RuntimeException("Bad log file!");
 }
