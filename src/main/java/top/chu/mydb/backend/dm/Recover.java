@@ -1,5 +1,8 @@
-package top.chu.mydb.backend.dm.pageIndex;
+package top.chu.mydb.backend.dm;
 
+import com.google.common.primitives.Bytes;
+import top.chu.mydb.backend.common.SubArray;
+import top.chu.mydb.backend.dm.dataItem.DataItem;
 import top.chu.mydb.backend.dm.logger.Logger;
 import top.chu.mydb.backend.dm.page.Page;
 import top.chu.mydb.backend.dm.page.PageX;
@@ -137,8 +140,14 @@ public class Recover {
     private static int OF_UPDATE_ID = OF_XID + 8;
     private static int OF_UPDATA_RAW = OF_UPDATE_ID + 8;
 
-    public static byte[] updateLog() {
-        return null;
+    public static byte[] updateLog(long xid, DataItem di) {
+        byte[] logType = {LOG_TYPE_UPDATE};
+        byte[] xidRaw = Parser.long2Byte(xid);
+        byte[] uidRaw = Parser.long2Byte(di.getUid());
+        byte[] oldRaw = di.getOldRaw();
+        SubArray raw = di.getRaw();
+        byte[] newRaw = Arrays.copyOfRange(raw.raw, raw.start, raw.end);
+        return Bytes.concat(logType, xidRaw, uidRaw, oldRaw, newRaw);
     }
 
     private static UpdateLogInfo parseUpdateLog(byte[] log) {
@@ -187,8 +196,12 @@ public class Recover {
     private static final int OF_INSERT_OFFSET = OF_INSERT_PGNO + 4;
     private static final int OF_INSERT_RAW = OF_INSERT_OFFSET + 2;
 
-    public static byte[] insertLog() {
-        return null;
+    public static byte[] insertLog(long xid, Page pg, byte[] raw) {
+        byte[] logTypeRaw = {LOG_TYPE_INSERT};
+        byte[] xidRaw = Parser.long2Byte(xid);
+        byte[] pgnoRaw = Parser.int2Byte(pg.getPageNumber());
+        byte[] offsetRaw = Parser.short2Byte(PageX.getFSO(pg));
+        return Bytes.concat(logTypeRaw, xidRaw, pgnoRaw, offsetRaw, raw);
     }
 
     private static InsertLogInfo parseInsertLog(byte[] log) {
